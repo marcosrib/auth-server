@@ -8,6 +8,7 @@ spring:
   security:
     oauth2:
       authorizationserver:
+        issuer-uri: http://localhost:9000
         client:
           api-service-client:
             registration:
@@ -19,6 +20,7 @@ spring:
                 - client_credentials
               scopes:
                 - apis:read
+            access-token-time-to-live: 15m
 
 jwt:
   issuer-uri: http://localhost:9000
