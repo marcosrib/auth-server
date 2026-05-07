@@ -6,13 +6,16 @@ spring:
     name: auth-server
 
   security:
+    user:
+      name: admin@gmail.com
+      password: admin123
     oauth2:
       authorizationserver:
         issuer-uri: http://localhost:9000
         client:
-          api-service-client:
+          resource-server-client:
             registration:
-              client-id: api-service
+              client-id: resource-server-service
               client-secret: "{noop}secret123"
               client-authentication-methods:
                 - client_secret_basic
@@ -20,8 +23,40 @@ spring:
                 - client_credentials
               scopes:
                 - apis:read
+                - apis:write
             access-token-time-to-live: 15m
-
+          app-web-client:
+            registration:
+              client-id: app-web-client
+              client-secret: "{noop}app-web-secret123"
+              authentication-grant-types:
+                - authorization_code
+              authentication-methods:
+                - client_secret_basic
+              redirect-uris: 
+                - http://localhost:9080/login/oauth2/code/app-web-client
+              scopes:
+                - apis:read
+                - apis:write
+            require-authorization-consent: true
+            require-proof-key: false
+            token:
+              access-token-time-to-live: 15m
+              refresh-token-time-to-live: 10m
+          app-web-m2m-client:
+            registration:
+              client-id: app-web-m2m
+              client-secret: "{noop}app-web-m2m-123"
+              authentication-grant-types:
+                - client_credentials
+              authentication-methods:
+                - client_secret_basic
+              scopes:
+                - apis:read
+                - apis:write
+            token:
+              access-token-time-to-live: 15m
+               
 jwt:
   issuer-uri: http://localhost:9000
 
