@@ -29,9 +29,9 @@ spring:
             registration:
               client-id: app-web-client
               client-secret: "{noop}app-web-secret123"
-              authentication-grant-types:
+              authorization-grant-types:
                 - authorization_code
-              authentication-methods:
+              client-authentication-methods:
                 - client_secret_basic
               redirect-uris: 
                 - http://localhost:9080/login/oauth2/code/app-web-client
@@ -47,10 +47,10 @@ spring:
             registration:
               client-id: app-web-m2m
               client-secret: "{noop}app-web-m2m-123"
-              authentication-grant-types:
-                - client_credentials
-              authentication-methods:
+              client-authentication-methods:
                 - client_secret_basic
+              authorization-grant-types:
+                - client_credentials
               scopes:
                 - apis:read
                 - apis:write
@@ -62,4 +62,5 @@ jwt:
 
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: TRACE
+
