@@ -29,9 +29,6 @@ spring:
     url: jdbc:mysql://localhost:3306/auth_server_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
 
   security:
-    user:
-      name: admin@gmail.com
-      password: admin123
     oauth2:
       authorizationserver:
         issuer-uri: http://localhost:9000
