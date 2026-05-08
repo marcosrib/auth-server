@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AuthUser {
+public class AuthUser extends AbstractAuditableAggregateRoot<AuthUser> {
     
     @Id
     @EqualsAndHashCode.Include
@@ -28,4 +28,6 @@ public class AuthUser {
 
     @Enumerated(EnumType.STRING)    
     private AuthUserTypeEnum type;
+
+
 }

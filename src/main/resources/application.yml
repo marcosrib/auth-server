@@ -62,6 +62,7 @@ spring:
               scopes:
                 - apis:read
                 - apis:write
+                - openid
             require-authorization-consent: true
             require-proof-key: false
             token:
