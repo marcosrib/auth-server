@@ -2,21 +2,58 @@ package com.br.auth_server.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
 @Configuration
 public class OAuth2TokenCustomizerConfig {
+
+    private final OidcUserInfoService oidcUserInfoService;
+
+    public OAuth2TokenCustomizerConfig(OidcUserInfoService oidcUserInfoService) {
+        this.oidcUserInfoService = oidcUserInfoService;
+    }
+    
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(OidcUserInfoService oidcUserInfoService) {
         return context -> {
-            if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
-                String email = context.getPrincipal().getName();
-                OidcUserInfo oidcUserInfo = oidcUserInfoService.loaUser(email);
+            String tokenType = context.getTokenType().getValue();
+            AuthorizationGrantType authorizationGrantType = context.getAuthorizationGrantType();
+            if (isIdToken(tokenType)) {
+                OidcUserInfo oidcUserInfo = loaOidcUserInfo(context);
                 context.getClaims().claims(claims -> claims.putAll(oidcUserInfo.getClaims()));
+            } else if (isAccessToken(tokenType)
+                 && (isAuthCodeFlow(authorizationGrantType))
+                 || isRefreshTokenFlow(authorizationGrantType)
+                ) {
+                OidcUserInfo oidcUserInfo = loaOidcUserInfo(context);
+                context.getClaims().subject(oidcUserInfo.getSubject());
             }
         };
-    }   
+    }
+
+    private  OidcUserInfo  loaOidcUserInfo(JwtEncodingContext context) {
+        String email = context.getPrincipal().getName();
+        return oidcUserInfoService.loaUser(email);
+    }
+
+    private boolean isIdToken(String tokenType) {
+        return OidcParameterNames.ID_TOKEN.equals(tokenType);
+    }
+
+    private boolean isAccessToken(String tokenType) {
+        return OAuth2TokenType.ACCESS_TOKEN.getValue().equals(tokenType);
+    }
+
+    private boolean isAuthCodeFlow(AuthorizationGrantType authorizationGrantType) {
+        return AuthorizationGrantType.AUTHORIZATION_CODE.equals(authorizationGrantType);
+    }
+
+    private boolean isRefreshTokenFlow(AuthorizationGrantType authorizationGrantType) {
+        return AuthorizationGrantType.REFRESH_TOKEN.equals(authorizationGrantType);
+    }
 }
