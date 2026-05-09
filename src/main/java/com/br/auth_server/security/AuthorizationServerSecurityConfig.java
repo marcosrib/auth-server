@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -17,13 +16,21 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @EnableWebSecurity
 public class AuthorizationServerSecurityConfig {
     
+
+   final OidcUserInfoMapper oidcUserInfoMapper;
+
+    public AuthorizationServerSecurityConfig(OidcUserInfoMapper oidcUserInfoMapper) {
+        this.oidcUserInfoMapper = oidcUserInfoMapper;
+    }
+
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationSecurityFilterChain(HttpSecurity http) {
        var authorizationServer = new OAuth2AuthorizationServerConfigurer();
         http.securityMatcher(authorizationServer.getEndpointsMatcher())
              .with(authorizationServer, configurer -> {
-                    configurer.oidc(Customizer.withDefaults());
+                    configurer.oidc(oidc -> oidc
+                        .userInfoEndpoint(userInfo -> userInfo.userInfoMapper(oidcUserInfoMapper)));
                 })
             .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
             .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
