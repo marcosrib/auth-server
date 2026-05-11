@@ -1,4 +1,4 @@
-package com.br.auth_server.security;
+package com.br.auth_server.security.userinfo;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.br.auth_server.security;
+package com.br.auth_server.security.password;
 
 import java.util.HashMap;
 import java.util.Map;

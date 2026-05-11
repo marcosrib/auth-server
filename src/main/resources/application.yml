@@ -59,6 +59,9 @@ spring:
                 - client_secret_basic
               redirect-uris: 
                 - http://localhost:9080/login/oauth2/code/app-web-client
+                - https://oauth.pstmn.io/v1/callback
+              post-logout-redirect-uris:
+                - http://localhost:9080?logout-success
               scopes:
                 - apis:read
                 - apis:write

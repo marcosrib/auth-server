@@ -1,4 +1,4 @@
-package com.br.auth_server.security;
+package com.br.auth_server.security.oidc;
 
 import java.util.function.Function;
 

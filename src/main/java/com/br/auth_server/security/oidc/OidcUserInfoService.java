@@ -1,4 +1,4 @@
-package com.br.auth_server.security;
+package com.br.auth_server.security.oidc;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;

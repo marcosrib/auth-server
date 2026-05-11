@@ -1,4 +1,4 @@
-package com.br.auth_server.security;
+package com.br.auth_server.security.token;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,8 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+
+import com.br.auth_server.security.oidc.OidcUserInfoService;
 
 @Configuration
 public class OAuth2TokenCustomizerConfig {
